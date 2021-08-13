@@ -1,0 +1,29 @@
+{
+  "name": "sdc-qa",
+  "version": "1.0.0",
+  "description": "## Lessons Learned * NEVER push large amounts of data to git hub.",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "dev": "nodemon index.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Team-Picasso/SDC-QA.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/Team-Picasso/SDC-QA/issues"
+  },
+  "homepage": "https://github.com/Team-Picasso/SDC-QA#readme",
+  "dependencies": {
+    "eslint": "^7.31.0",
+    "eslint-config-airbnb-base": "^14.2.1",
+    "eslint-plugin-import": "^2.24.0",
+    "express": "^4.17.1",
+    "nodemon": "^2.0.12",
+    "pg": "^8.7.1"
+  }
+}
