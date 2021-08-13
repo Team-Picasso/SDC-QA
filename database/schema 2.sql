@@ -42,3 +42,4 @@ REFERENCES questions(id);
 ALTER TABLE answers_photos ADD CONSTRAINT "answers-answers_photos"
 FOREIGN KEY (answer_id)
 REFERENCES answers(id);
+
