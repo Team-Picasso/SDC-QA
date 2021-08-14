@@ -12,13 +12,14 @@ app.use(
   })
 );
 
-//this doesn't work yet
-// app.get('/questions', db.getQuestions);
+app.get('/qa/questions', db.getQuestions);
+app.get('/qa/questions/:question_id/answers', db.getAnswers);
+app.post('/qa/questions', db.addQuestion);
+// app.get('/allquestions', db.getAllQuestions);
 
 app.get('/', (req, res)=>{
-  res.json({info: 'Node.js, Express, and Postgres API'})
+  res.json({info: 'Node.js, Express, and Postgres API'});
 });
-
 
 app.listen(port, () => {
   console.log(`App running on port ${port}`);

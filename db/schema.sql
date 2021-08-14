@@ -68,13 +68,18 @@ COPY questions(id, product_id, body, date_written, asker_name, asker_email, repo
 FROM '/Users/amaliabryant/Documents/HackReactor/SDC/seed/questions.csv'
 DELIMITER ','
 CSV HEADER;
+CREATE INDEX product_id_index ON questions (product_id);
 
 COPY answers(id, question_id, body, date_written, answerer_name, answerer_email, reported, helpfulness)
 FROM '/Users/amaliabryant/Documents/HackReactor/SDC/seed/answers.csv'
 DELIMITER ','
 CSV HEADER;
+CREATE INDEX question_id_index ON answers (question_id);
+
 
 COPY answers_photos(id, answer_id, url)
 FROM '/Users/amaliabryant/Documents/HackReactor/SDC/seed/answers_photos.csv'
 DELIMITER ','
 CSV HEADER;
+CREATE INDEX answer_id_index ON answers_photos (answer_id);
+
