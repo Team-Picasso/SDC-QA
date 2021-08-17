@@ -13,7 +13,7 @@ CREATE DATABASE picassodb;
 
 /* Table 'questions' */
 CREATE TABLE questions (
-id integer NOT NULL,
+id SERIAL,
 product_id integer NOT NULL,
 body text NOT NULL,
 date_written bigint NOT NULL,
@@ -25,7 +25,7 @@ PRIMARY KEY(id));
 
 /* Table 'answers' */
 CREATE TABLE answers (
-id integer NOT NULL,
+id SERIAL NOT NULL,
 question_id integer NOT NULL,
 body text NOT NULL,
 date_written bigint NOT NULL,
@@ -37,7 +37,7 @@ PRIMARY KEY(id));
 
 /* Table 'answers_photos' */
 CREATE TABLE answers_photos (
-id integer NOT NULL,
+id SERIAL NOT NULL,
 answer_id integer NOT NULL,
 url text NOT NULL,
 PRIMARY KEY(id));
