@@ -74,18 +74,42 @@ const getQuestions = (request, response) => {
 }
 
 const getAnswers = (request, response) => {
+  //add page and count to the
   const q = {
     question_id: Number(request.params.question_id),
     count: request.query.count? request.query.count: 5,
     page: request.query.page? request.query.page: 1
-  }
-
+  };
   pool.query(`
-    select *
-    from   answers
-    where  question_id = ${q.question_id} and reported = 0
-    limit  ${q.count}
-    offset ${((q.page * q.count) - q.count)}
+  SELECT
+	a.question_id,
+	json_agg(
+		json_build_object(
+			'answer_id', a.id,
+			'body', a.body,
+			'date', a.date_written,
+			'answerer_name', a.answerer_name,
+			'helpfulness', a.helpfulness,
+			'photos', ap
+		)
+	)answersArray
+	FROM
+		answers a
+		LEFT JOIN (
+			SELECT
+				p.answer_id,
+				json_agg(
+					json_build_object(
+						'id', p.id,
+						'url', p.url
+					)
+				)ap
+			FROM answers_photos p
+			GROUP BY p.answer_id
+		) p
+	ON a.id = p.answer_id
+    WHERE question_id = ${q.question_id}
+	GROUP BY a.question_id;
 `, (err, res)=>{
     if(err) {
       throw err;
@@ -94,7 +118,7 @@ const getAnswers = (request, response) => {
       "question": String(q.question_id),
       "page": q.page,
       "count": q.count,
-      "results": res.rows
+      "results": res.rows[0].answersarray
     });
   })
 }
@@ -178,11 +202,10 @@ const markQuestionAsHelpful = (request, response) => {
   )
 }
 
-//FIX ME!!
 const markAnswerAsHelpful = (request, response) => {
     pool.query(
-    `UPDATE questions
-    SET helpful = (SELECT helpful FROM answers WHERE id = ${request.params.answer_id}) + 1
+    `UPDATE answers
+    SET helpfulness = (SELECT helpfulness FROM answers WHERE id = ${request.params.answer_id}) + 1
     WHERE id = ${request.params.answer_id}
     `,
     (err, res) => {
