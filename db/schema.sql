@@ -84,11 +84,11 @@ CSV HEADER;
 CREATE INDEX answer_id_index ON answers_photos (answer_id);
 
 
-COPY answers_photos(id, answer_id, url)
-FROM '/home/ubuntu/seed/seed/seed/answers_photos.csv'
-DELIMITER ','
-CSV HEADER;
-CREATE INDEX answer_id_index ON answers_photos (answer_id);
+-- COPY answers_photos(id, answer_id, url)
+-- FROM '/home/ubuntu/seed/seed/seed/answers_photos.csv'
+-- DELIMITER ','
+-- CSV HEADER;
+-- CREATE INDEX answer_id_index ON answers_photos (answer_id);
 
 
 

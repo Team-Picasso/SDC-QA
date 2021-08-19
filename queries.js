@@ -2,8 +2,8 @@ const moment = require('moment');
 
 const Pool = require('pg').Pool;
 const pool = new Pool({
-  user: 'amaliabryant',
-  host: 'localhost',
+  user: 'postgres',
+  host: '18.188.234.145',
   database: 'picassodb',
   password: 'password',
   port: 5432
@@ -57,19 +57,19 @@ const getQuestions = (request, response) => {
           )ap
         FROM answers_photos p
         GROUP BY p.answer_id
+        LIMIT 5
       ) p on a.id = p.answer_id
     GROUP BY a.question_id
+    LIMIT 2
   ) a on q.id = a.question_id
   WHERE q.product_id = ${q.product_id}
-  GROUP BY q.product_id;
+  GROUP BY q.product_id
+  LIMIT 1;
 `, (err, res)=>{
     if(err) {
       throw err;
     }
-    response.status(200).json({
-      "product_id": String(q.product_id),
-      "results": res.rows
-    });
+    response.status(200).json(res.rows[0]);
   })
 }
 
