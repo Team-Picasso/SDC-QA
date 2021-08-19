@@ -27,11 +27,8 @@ app.put('/qa/questions/:question_id/report', db.reportQuestion);
 app.put('/qa/answers/:answer_id/helpful', db.markAnswerAsHelpful);
 app.put('/qa/answers/:answer_id/report', db.reportAnswer);
 
-//dev
-app.get('/qa/allquestions', db.getAllQuestions);
-
 app.get('/', (req, res)=>{
-  res.json({info: 'Node.js, Express, and Postgres API'});
+  res.json({salutation: 'Welcome to the qa server. Please choose your own psql query adventure'});
 });
 
 app.listen(port, () => {

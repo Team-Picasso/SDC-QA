@@ -1,16 +1,24 @@
 const moment = require('moment');
 
+/* LOCAL DB*/
+// const Pool = require('pg').Pool;
+// const pool = new Pool({
+//   user: 'amaliabryant',
+//   host: 'localhost',
+//   database: 'picassodb',
+//   password: 'password',
+//   port: 5432
+// })
+/* AWS DB */
 const Pool = require('pg').Pool;
 const pool = new Pool({
   user: 'postgres',
-  host: '18.188.234.145',
+  host: '18.221.68.215',
   database: 'picassodb',
   password: 'password',
   port: 5432
 })
 
-//FIXME: ADD PAGE/COUNT FUNCTIONALITY
-//TODO: OPTIMIZE RUNTIME
 const getQuestions = (request, response) => {
   const q = {
     product_id: Number(request.params.product_id),
@@ -74,7 +82,6 @@ const getQuestions = (request, response) => {
 }
 
 const getAnswers = (request, response) => {
-  //add page and count to the
   const q = {
     question_id: Number(request.params.question_id),
     count: request.query.count? request.query.count: 5,
@@ -172,18 +179,6 @@ const addAnswer = (request, response) => {
           throw err;
         } else {
           response.status(201).send('CREATED');
-          //could make this asynchronous... would be better
-          //look into pg-promise async/await
-          // pool.query('SELECT id FROM answers_photos ORDER BY id DESC LIMIT 1;', (err, result)=>{
-          //   let photoId = result.rows[0].id;
-          //   if(err){
-          //     throw err;
-          //   }else{
-          //     request.body.photos.forEach((photo, i))=>{
-          //       pool.query(
-          //         'INSERT INTO answers_photos(id, answer_id, url) VALUES ($1, $2, $3);',[photoId + i + 1, answerId, photo]);
-          //   }
-          // })
         }
     })
   });
@@ -215,12 +210,11 @@ const markAnswerAsHelpful = (request, response) => {
   )
 }
 
-//FIX ME
 const reportQuestion = (request, response) => {
     pool.query(
     `UPDATE questions
-    SET helpfulness = (SELECT helpfulness FROM questions WHERE id = ${request.params.question_id}) + 1
-    WHERE id = ${request.params.question_id}
+    SET reported = 1
+    WHERE id = ${request.params.question_id};
     `,
     (err, res) => {
       if (err) {throw err};
@@ -229,38 +223,21 @@ const reportQuestion = (request, response) => {
   )
 }
 
-//FIX ME
 const reportAnswer = (request, response) => {
     pool.query(
-    `UPDATE questions
-    SET helpful = (SELECT helpful FROM questions WHERE id = ${request.params.question_id}) + 1
-    WHERE id = ${request.params.question_id}
+    `UPDATE answers
+    SET reported = 1
+    WHERE id = ${request.params.answer_id}
     `,
     (err, res) => {
       if (err) {throw err};
       response.status(204).send();
     }
   )
-}
-
-//DEV
-const getAllQuestions = (request, response) => {
-  const q = request.query;
-  pool.query(`
-    select *
-    from   questions
-    where  product_id = ${q.product_id}
-`, (err, res)=>{
-    if(err) {
-      throw err;
-    }
-    response.status(200).json(res.rows);
-  })
 }
 
 module.exports = {
   getQuestions,
-  getAllQuestions,
   getAnswers,
   addQuestion,
   addAnswer,
